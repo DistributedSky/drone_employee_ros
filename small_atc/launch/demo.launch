@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <include ns="small_atc" file="$(find small_atc)/launch/atc.launch"/>
+    <include file="$(find small_atc_dron)/launch/apm_sitl.launch">
+        <arg name="ident" value="1" />
+    </include>
+    <include file="$(find small_atc_dron)/launch/apm_sitl.launch">
+        <arg name="ident" value="2" />
+    </include>
+    <include file="$(find small_atc_dron)/launch/apm_sitl.launch">
+        <arg name="ident" value="3" />
+    </include>
+</launch>

@@ -1,0 +1,24 @@
+*** fcl-0.3.2/CMakeLists.txt	2014-10-28 08:10:48.000000000 +0300
+--- fcl-0.3.2-r1/CMakeLists.txt	2015-12-18 17:04:36.210687684 +0300
+***************
+*** 49,57 ****
+          ${CMAKE_SHARED_LIBRARY_PREFIX}octomap${CMAKE_SHARED_LIBRARY_SUFFIX})
+      if(OCTOMAP_INCLUDE_DIRS AND OCTOMAP_LIBRARY_DIRS)
+          set(OCTOMAP_LIBRARIES "octomap;octomath")
+      endif()
+  endif()
+! if (OCTOMAP_INCLUDE_DIRS AND OCTOMAP_LIBRARY_DIRS)
+    include_directories(${OCTOMAP_INCLUDE_DIRS})
+    link_directories(${OCTOMAP_LIBRARY_DIRS})
+    set(FCL_HAVE_OCTOMAP 1)
+--- 49,58 ----
+          ${CMAKE_SHARED_LIBRARY_PREFIX}octomap${CMAKE_SHARED_LIBRARY_SUFFIX})
+      if(OCTOMAP_INCLUDE_DIRS AND OCTOMAP_LIBRARY_DIRS)
+          set(OCTOMAP_LIBRARIES "octomap;octomath")
++         set(OCTOMAP_FOUND 1)
+      endif()
+  endif()
+! if (OCTOMAP_FOUND)
+    include_directories(${OCTOMAP_INCLUDE_DIRS})
+    link_directories(${OCTOMAP_LIBRARY_DIRS})
+    set(FCL_HAVE_OCTOMAP 1)
