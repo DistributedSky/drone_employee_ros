@@ -1,0 +1,3 @@
+[submodule "aira_ros_bridge"]
+	path = aira_ros_bridge
+	url = git://github.com/aira-dao/aira_ros_bridge.git
