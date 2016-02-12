@@ -2,7 +2,7 @@
 import rospy, math
 from geometry_msgs.msg import Point, PoseStamped
 from sensor_msgs.msg import NavSatFix
-from dron_common_msgs.msg import *
+from small_atc_msgs.msg import *
 from nav_msgs.msg import Path
 from threading import Thread
 
