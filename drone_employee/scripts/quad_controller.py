@@ -20,7 +20,7 @@ def take_current(queue):
     return queue.get(True, None)
 
 def quad_controller(route_queue, position_queue, arming_queue):
-    flight_done_pub = Publisher('release', UInt32, queue_size=1) 
+    flight_done_pub = Publisher('remove', UInt32, queue_size=1) 
     while not is_shutdown():
         # Take a route
         route = route_queue.get(True, None)
