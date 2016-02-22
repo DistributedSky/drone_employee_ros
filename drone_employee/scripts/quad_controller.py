@@ -59,7 +59,7 @@ def main():
     arming_queue = Queue()
     # Create controller thread
     controller = Thread(target=quad_controller,
-                        args=(target_queue, position_queue, arming_queue))
+                        args=(route_queue, position_queue, arming_queue))
     
     # Route message handler
     def quad_route(msg):

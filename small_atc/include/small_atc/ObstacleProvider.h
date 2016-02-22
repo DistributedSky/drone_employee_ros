@@ -56,9 +56,9 @@ public:
     }
 
     void publishAll() {
-        for (auto k = obstacles.begin(); k != obstacles.end(); ++k) {
-            int id = k->first;
-            const Obstacle *map = k->second;
+        for (auto k : obstacles) {
+            int id = k.first;
+            const Obstacle *map = k.second;
             publishers[id].publish(map->getOctomapMsg());
         }
     }
