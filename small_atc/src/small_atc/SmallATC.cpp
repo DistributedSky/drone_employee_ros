@@ -54,13 +54,13 @@ void SmallATC::requestHandler(const LocalRouteRequest::ConstPtr &msg) {
 }
 
 int SmallATC::exec() {
-    ros::Rate dur(0.2);
+    ros::Rate cycle(0.2);
     while (ros::ok()) {
         // Publish all the obstacles with associated topics
 		//ROS_INFO("Rate");
         obstacles->publishAll();
         ros::spinOnce();
-        dur.sleep();
+        cycle.sleep();
     }
     return 0;
 }

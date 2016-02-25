@@ -89,11 +89,11 @@ def emitPath(ident, pointList):
 
 if __name__ == '__main__':
     rospy.init_node("atc_geo_helper")
-    connect(("/small_atc/route/request", RouteRequest),
+    connect(("route/request", RouteRequest),
             ("route/request_local", LocalRouteRequest),
             requestHandler)
     connect(("route/response_local", LocalRouteResponse),
-            ("/small_atc/route/response", RouteResponse),
+            ("route/response", RouteResponse),
             responseHandler)
 
     connect(("/dron_1/mavros/global_position/global", NavSatFix),
