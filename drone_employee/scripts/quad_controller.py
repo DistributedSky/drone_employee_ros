@@ -29,7 +29,7 @@ def quad_controller(route_queue, position_queue, arming_queue):
             logerr('Route invalid!')
             return
         # Push a mission into flight controller
-        push_mission(waypointWrap(target.route))
+        push_mission(waypointWrap(route.route))
         loginfo('Mission loaded to flight controller.')
         # Set manual mode
         set_mode('ACRO')
@@ -59,7 +59,7 @@ def main():
     arming_queue = Queue()
     # Create controller thread
     controller = Thread(target=quad_controller,
-                        args=(target_queue, position_queue, arming_queue))
+                        args=(route_queue, position_queue, arming_queue))
     
     # Route message handler
     def quad_route(msg):
