@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <node name="state" pkg="drone_employee" type="state_publisher.py" />
-    <node name="controller" pkg="drone_employee" type="quad_controller.py" />
+    <node name="controller" pkg="drone_employee" type="quad_controller.py" output="screen"/>
 </launch>

@@ -21,7 +21,7 @@ DynamicOctoMap::DynamicOctoMap(const std::string &filename)
 octomap_msgs::Octomap DynamicOctoMap::getOctomapMsg() const 
 {
     octomap_msgs::Octomap msg;
-    octomap_msgs::binaryMapToMsg(*octomap, msg);
+    octomap_msgs::fullMapToMsg(*octomap, msg);
     msg.header.stamp = ros::Time::now();
     msg.header.frame_id = "map";
     return msg; 
