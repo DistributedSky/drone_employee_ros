@@ -28,7 +28,7 @@ def main():
     if len(argv) != 5:
         wrong_usage()
 
-    if argv[1] == '-s':
+    if argv[1] == '-p':
         print 'convert to SatFix'
         try:
             point = convert_init(Point, ['x', 'y', 'z'], argv[2:])
@@ -36,7 +36,7 @@ def main():
             wrong_usage()
         print point2SatFix(point)
 
-    elif argv[1] == '-p':
+    elif argv[1] == '-s':
         print 'convert to Point'
         try:
             satfix = convert_init(SatFix, ['latitude', 'longitude', 'altitude'], argv[2:])
