@@ -31,18 +31,31 @@ void DynamicOctoMap::drawAABB(const geometry_msgs::Point &AA,
                               const geometry_msgs::Point &BB)
 {
     octomap::Pointcloud cloud;
-    for (int x = AA.x; x < BB.x; x++)
-        for (int z = AA.z; z < BB.z; z++) {
+	int max_x = std::max(AA.x, BB.x);
+	int max_y = std::max(AA.y, BB.y);
+	int max_z = std::max(AA.z, BB.z);
+	int min_x = std::min(AA.x, BB.x);
+	int min_y = std::min(AA.y, BB.y);
+	int min_z = std::min(AA.z, BB.z);
+
+	/*
+	for (int x = min_x; x < max_x; x++)
+		for (int y = min_y; y < max_y; y++)
+			for (int z = min_z; z < max_z; z++)
+				cloud.push_back(x, y, z);
+				*/
+    for (int x = min_x; x < max_x; x++)
+        for (int z = min_z; z < max_z; z++) {
             cloud.push_back(x, AA.y, z); 
             cloud.push_back(x, BB.y, z); 
         }
-    for (int y = AA.y; y < BB.y; y++)
-        for (int z = AA.z; z < BB.z; z++) {
+    for (int y = min_y; y < max_y; y++)
+        for (int z = min_z; z < max_z; z++) {
             cloud.push_back(AA.x, y, z); 
             cloud.push_back(BB.x, y, z); 
         }
-    for (int x = AA.x; x < BB.x; x++)
-        for (int y = AA.y; y < BB.y; y++) {
+    for (int x = min_x; x < max_x; x++)
+        for (int y = min_y; y < max_y; y++) {
             cloud.push_back(x, y, AA.z); 
             cloud.push_back(x, y, BB.z); 
         }

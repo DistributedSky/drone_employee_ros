@@ -24,9 +24,9 @@ SmallATC::SmallATC() {
 		DynamicOctoMap *obstacle = new DynamicOctoMap();
 		geometry_msgs::Point point1;
 		geometry_msgs::Point point2;
-		point1.x = -800;
+		point1.x = -1200;
 		point1.y = -1000;
-		point1.z = 1400;
+		point1.z = 1500;
 		point2.x = 200;
 		point2.y = -600;
 		point2.z = 1200;
