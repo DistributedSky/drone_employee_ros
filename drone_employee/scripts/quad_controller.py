@@ -32,6 +32,9 @@ def find_cur_waypoint_id(route):
         if route[i].is_current:
             return i
 
+def drop_cargo():
+    logwarn("DROP!!!")
+
 def quad_controller(route_queue, position_queue, arming_queue,
                     trgt_lat_queue, trgt_lon_queue, waypoints_queue):
     flight_done_pub = Publisher('remove', UInt32, queue_size=1)
@@ -81,7 +84,7 @@ def quad_controller(route_queue, position_queue, arming_queue,
             current_waypoint_id = find_cur_waypoint_id(waypoints)
             if current_waypoint_id > need_waypoint_id:
                 droped = True
-                logwarn("DROP!!!")
+                drop_cargo()
 
         # TODO: More elegant case for mission finish check
         while arming_queue.get().data:
