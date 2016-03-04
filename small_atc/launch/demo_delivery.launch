@@ -4,10 +4,4 @@
     <include file="$(find drone_employee)/launch/apm_sitl.launch">
         <arg name="ident" value="1" />
     </include>
-    <include file="$(find drone_employee)/launch/apm_sitl.launch">
-        <arg name="ident" value="2" />
-    </include>
-    <include file="$(find drone_employee)/launch/apm_sitl.launch">
-        <arg name="ident" value="3" />
-    </include>
 </launch>
