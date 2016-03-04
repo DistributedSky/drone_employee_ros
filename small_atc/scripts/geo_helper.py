@@ -15,7 +15,7 @@ class Origin(object):
 origin = Origin()
 origin.latitude = 37.874815
 origin.longitude = -122.616569
-origin.altitude = -1000
+origin.altitude = -1139
 origin.offset = (1060, 1930)
 #
 ###
