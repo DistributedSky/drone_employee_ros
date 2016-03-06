@@ -50,6 +50,7 @@ add_message_files(
   DIRECTORY msg
   FILES
     SatFix.msg
+    Address.msg
     RouteRequest.msg
     RouteResponse.msg
     LocalRouteRequest.msg

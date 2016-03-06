@@ -36,7 +36,7 @@ def drop_cargo():
     logwarn("DROP!!!")
 
 def quad_controller(route_queue, position_queue, arming_queue,
-                    trgt_lat_queue, trgt_lon_queue, waypoints_queue):
+                    trgt_queue, waypoints_queue):
     flight_done_pub = Publisher('remove', UInt32, queue_size=1)
     while not is_shutdown():
         # Take a route
@@ -45,16 +45,12 @@ def quad_controller(route_queue, position_queue, arming_queue,
         if not route.valid:
             logerr('Route invalid!')
             return
-        target_pos = None
+        target_pos = trgt_queue.get(True, None)
         need_waypoint_id = None
-        if trgt_lat_queue.empty() or trgt_lon_queue.empty():
-            logwarn('No target!')
-        else:
-            target_pos = (trgt_lat_queue.get().data / 1e6,
-                          trgt_lon_queue.get().data / 1e6)
-            # Determine the point where you want to dump the load
-            need_waypoint_id = find_waypoint_id(route, target_pos)
-            loginfo('need_waypoint_id: ' + str(need_waypoint_id))
+        
+        # Determine the point where you want to dump the load
+        need_waypoint_id = find_waypoint_id(route, (target_pos.latitude, target_pos.longitude))
+        loginfo('need_waypoint_id: ' + str(need_waypoint_id))
 
         # Push a mission into flight controller
         push_mission(waypointWrap(route.route))
@@ -100,13 +96,12 @@ def main():
     route_queue = Queue()
     position_queue = Queue()
     arming_queue = Queue()
-    trgt_lat_queue = Queue()
-    trgt_lon_queue = Queue()
+    trgt_queue = Queue()
     waypoints_queue = Queue()
     # Create controller thread
     controller = Thread(target=quad_controller,
                         args=(route_queue, position_queue, arming_queue,
-                              trgt_lat_queue, trgt_lon_queue, waypoints_queue))
+                              trgt_queue, waypoints_queue))
 
     # Route message handler
     def quad_route(msg):
@@ -117,8 +112,7 @@ def main():
     Subscriber('mavros/global_position/global', NavSatFix, position_queue.put)
     Subscriber('armed', Bool, arming_queue.put)
     # TODO: combine next two topic in one
-    Subscriber('drop_target_lat', Int64, trgt_lat_queue.put)
-    Subscriber('drop_target_lon', Int64, trgt_lon_queue.put)
+    Subscriber('target_request', NavSatFix, trgt_queue.put)
     Subscriber('mavros/mission/waypoints', WaypointList, waypoints_queue.put)
     Subscriber('route', RouteResponse, quad_route)
     spin()
