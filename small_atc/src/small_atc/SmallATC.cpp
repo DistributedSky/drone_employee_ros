@@ -20,7 +20,7 @@ SmallATC::SmallATC() {
     std::string filename;
     if (param::get("~map_file", filename)) {
 		//Next code is crutch
-		//Create restricted area
+		/*Create restricted area
 		DynamicOctoMap *obstacle = new DynamicOctoMap();
 		geometry_msgs::Point point1;
 		geometry_msgs::Point point2;
@@ -32,6 +32,7 @@ SmallATC::SmallATC() {
 		point2.z = 1200;
 		obstacle->drawAABB(point1, point2);
 		obstacles->addObstacle(777, obstacle);
+        */
 
         obstacles->addObstacle(0, new DynamicOctoMap(filename));
         ROS_INFO("Loaded topographic map: %s", filename.c_str());
@@ -68,13 +69,18 @@ void SmallATC::requestHandler(const LocalRouteRequest::ConstPtr &msg) {
 }
 
 int SmallATC::exec() {
-    ros::Rate cycle(0.2);
+    // No need to publish obstacles in this demo
+    ros::spin();
+    return 0;
+
+    /*
+    ros::Rate cycle(0.1);
     while (ros::ok()) {
         // Publish all the obstacles with associated topics
-		//ROS_INFO("Rate");
         obstacles->publishAll();
         ros::spinOnce();
         cycle.sleep();
     }
     return 0;
+    */
 }

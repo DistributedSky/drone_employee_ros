@@ -20,6 +20,8 @@ origin.offset = (1060, 1930)
 #
 ###
 
+payed_address = set()
+
 def grad2len(grad):
     return math.pi * RADIUS_OF_EARTH * grad / 180
 
@@ -49,10 +51,19 @@ def navSatFix2Pose(fix):
 def connect(topic_in, topic_out, handler):
     pub = rospy.Publisher(topic_out[0], topic_out[1], queue_size=1)
     def _handler(msg):
-        pub.publish(handler(msg))
+        try:
+            pub.publish(handler(msg))
+        except e:
+            rospy.logerr("Exception: " + e)
     rospy.Subscriber(topic_in[0], topic_in[1], _handler)
 
 def requestHandler(msg):
+    # Payment check
+    if (not msg.sender in payed_address):
+        raise Exception("Address (" + msg.sender + ") is not payed!")
+    else:
+        payed_address.remove(msg.sender)
+    # Geo conversions
     req = LocalRouteRequest()
     req.id = msg.id
     req.checkpoints = map(satFix2Point, msg.checkpoints)
@@ -95,14 +106,16 @@ if __name__ == '__main__':
     connect(("route/response_local", LocalRouteResponse),
             ("route/response", RouteResponse),
             responseHandler)
+    rospy.Subscriber("payed_address", Address, lambda msg: payed_address.add(msg.data))
 
-    connect(("/dron_1/mavros/global_position/global", NavSatFix),
-            ("/dron_1/position", PoseStamped),
-            navSatFix2Pose)
-    connect(("/dron_2/mavros/global_position/global", NavSatFix),
-            ("/dron_2/position", PoseStamped),
-            navSatFix2Pose)
-    connect(("/dron_3/mavros/global_position/global", NavSatFix),
-            ("/dron_3/position", PoseStamped),
-            navSatFix2Pose)
+# Drones visualisation hook
+#    connect(("/dron_1/mavros/global_position/global", NavSatFix),
+#            ("/dron_1/position", PoseStamped),
+#            navSatFix2Pose)
+#    connect(("/dron_2/mavros/global_position/global", NavSatFix),
+#            ("/dron_2/position", PoseStamped),
+#            navSatFix2Pose)
+#    connect(("/dron_3/mavros/global_position/global", NavSatFix),
+#            ("/dron_3/position", PoseStamped),
+#            navSatFix2Pose)
     rospy.spin()
