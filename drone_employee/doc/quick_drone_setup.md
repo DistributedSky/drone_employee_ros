@@ -16,11 +16,11 @@
 
 ### Smart contracts
 
-Drone should have access to public(official) Ethereum network and private network **MIRA**.
+Drone should have access to public(official) Ethereum network and private DAO network.
 Mine two [contracts](https://github.com/DroneEmployee/contracts):
 
-* drone_employee_external.sol (official Ethereum)
-* drone_employee_internal.sol (MIRA)
+* drone_employee_external.sol (Ethereum Blockchain)
+* drone_employee_internal.sol (DAO Blockchain)
 
 Constructors takes several arguments, e.g. *Air traffice controller* address(public/private),
 *market* address and external drone contract also require internal contract address.
