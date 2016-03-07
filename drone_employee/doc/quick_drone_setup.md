@@ -31,5 +31,5 @@ The experimental *Air traffic controller* up for *Tamalpais state park* area.
 
 ![Tamalpais area](https://raw.githubusercontent.com/DroneEmployee/drone_employee_ros/demo_march/drone_employee/doc/tamalpais_region.png)
 
-* **MIRA** address: *0x...*
-* Official Ethereum address: *0x...*
+* **DAO Blockchain** address: *0x...*
+* Official Ethereum Blockchain address: *0x...*
