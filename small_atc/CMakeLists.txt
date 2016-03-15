@@ -16,12 +16,12 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(octomap REQUIRED)
 find_package(ompl REQUIRED)
+find_package(LibLAS)
 
 find_package(PkgConfig REQUIRED) 
 pkg_check_modules(LIBFCL REQUIRED fcl) 
 find_library(LIBFCL_LIBRARIES_FULL ${LIBFCL_LIBRARIES} ${LIBFCL_LIBRARY_DIRS}) 
 set(LIBFCL_LIBRARIES "${LIBFCL_LIBRARIES_FULL}") 
-
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -167,6 +167,14 @@ target_link_libraries(small_atc_node
   ${catkin_LIBRARIES}
   small_atc
 )
+
+if (LibLAS_FOUND)
+    add_executable(las2bt src/tools/las2bt.cpp)
+    target_link_libraries(las2bt
+        ${catkin_LIBRARIES}
+        ${libLAS_LIBRARIES}
+        ${OCTOMAP_LIBRARIES})
+endif(LibLAS_FOUND)
 
 #############
 ## Install ##
