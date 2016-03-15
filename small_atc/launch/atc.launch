@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
+    <arg name="map_file" default="$(find small_atc)/data/tamalpais_park"/>
+
+    <!-- Air traffic controller node -->
     <node name="air_traffic_controller" pkg="small_atc" type="small_atc_node" output="screen">
-        <param name="map_file" value="$(find small_atc)/data/tamalpais_park.bt"/>
+        <param name="map_file" value="$(arg map_file).bt"/>
     </node>
-    <node name="geo_helper" pkg="small_atc" type="geo_helper.py"/> 
+
+    <!-- Global navigation system coordinates converter -->
+    <node name="geo_helper" pkg="small_atc" type="geo_helper.py">
+        <rosparam command="load" file="$(arg map_file).yaml"/>
+    </node>
 </launch>

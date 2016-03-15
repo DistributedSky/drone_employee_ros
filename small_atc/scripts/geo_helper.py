@@ -9,16 +9,34 @@ from threading import Thread
 RADIUS_OF_EARTH = 6371.0 * 1000 # meters 
 
 ###
-# TODO: Origin param
+# Map metadata loader
 class Origin(object):
-    pass
-origin = Origin()
-origin.latitude = 37.874815
-origin.longitude = -122.616569
-origin.altitude = -1139
-origin.offset = (1060, 1930)
-#
-###
+    def __init__(self, latitude, longitude, altitude):
+        self._latitude = latitude
+        self._longitude = longitude
+        self._altitude = altitude
+
+    def latitude(self):
+        return self._latitude
+
+    def longitude(self):
+        return self._longitude
+
+    def altitude(self):
+        return self._altitude
+
+class MapMeta(object):
+
+    def __init__(self):
+        origin_lat = rospy.get_param("~origin_latitude")
+        origin_lon = rospy.get_param("~origin_longitude")
+        origin_alt = rospy.get_param("~origin_altitude")
+        self._origin = Origin(origin_lat, origin_lon, origin_alt)
+
+    def origin(self):
+        return self._origin
+
+meta = object()
 
 payed_address = set()
 
@@ -30,16 +48,16 @@ def len2grad(len):
 
 def satFix2Point(fix):
     pt = Point()
-    pt.x = grad2len(fix.longitude - origin.longitude) - origin.offset[0]
-    pt.y = grad2len(fix.latitude - origin.latitude) - origin.offset[1]
-    pt.z = (fix.altitude - origin.altitude)
+    pt.x = grad2len(fix.longitude - meta.origin().longitude())
+    pt.y = grad2len(fix.latitude  - meta.origin().latitude())
+    pt.z = (fix.altitude - meta.origin().altitude())
     return pt
 
 def point2SatFix(pt):
     fix = SatFix()
-    fix.latitude = origin.latitude + len2grad(pt.y + origin.offset[1])
-    fix.longitude = origin.longitude + len2grad(pt.x + origin.offset[0])
-    fix.altitude = origin.altitude + pt.z
+    fix.latitude  = meta.origin().latitude()  + len2grad(pt.y)
+    fix.longitude = meta.origin().longitude() + len2grad(pt.x)
+    fix.altitude  = meta.origin().altitude()  + pt.z
     return fix
 
 def navSatFix2Pose(fix):
@@ -53,14 +71,14 @@ def connect(topic_in, topic_out, handler):
     def _handler(msg):
         try:
             pub.publish(handler(msg))
-        except e:
-            rospy.logerr("Exception: " + e)
+        except Exception as e:
+            rospy.logerr("Exception: " + str(e))
     rospy.Subscriber(topic_in[0], topic_in[1], _handler)
 
 def requestHandler(msg):
     # Payment check
     if (not msg.sender in payed_address):
-        raise Exception("Address (" + msg.sender + ") is not payed!")
+        raise Exception("Address (" + msg.sender.data.data + ") is not payed!")
     else:
         payed_address.remove(msg.sender)
     # Geo conversions
@@ -100,6 +118,8 @@ def emitPath(ident, pointList):
 
 if __name__ == '__main__':
     rospy.init_node("atc_geo_helper")
+    meta = MapMeta()
+
     connect(("route/request", RouteRequest),
             ("route/request_local", LocalRouteRequest),
             requestHandler)
