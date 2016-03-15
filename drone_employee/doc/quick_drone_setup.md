@@ -29,7 +29,17 @@ Constructors takes several arguments, e.g. *Air traffice controller* address(pub
 
 The experimental *Air traffic controller* up for *Tamalpais state park* area.
 
-![Tamalpais area](https://raw.githubusercontent.com/DroneEmployee/drone_employee_ros/demo_march/drone_employee/doc/tamalpais_region.png)
+![Tamalpais area](https://raw.githubusercontent.com/DroneEmployee/drone_employee_ros/master/drone_employee/doc/tamalpais_region.png)
 
-* **DAO Blockchain** address: *0x...*
-* Official Ethereum Blockchain address: *0x...*
+**Air traffic controller:**
+
+* **DAO Blockchain** address: *0x224946f3307201e32fb0b28abf8d2a5e76852ac1*
+* **Test Ethereum Blockchain address: *0x31f0a3719e7871e513d5d395d9e3cb16c4e2d980*
+
+**Market:**
+
+Market placed on Test Ethereum network and has address *0x7b1c7a7c3982ac313f1829589c944749668c6a9a*.
+
+**EtherToken:**
+
+Ether token provide abstract tokens based on Ethereum assets for the *market*, placed on Test Ethereum network and has address *0x2eb397602ac24e5f29f8799f3b7455881b46d439*.
