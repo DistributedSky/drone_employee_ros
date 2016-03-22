@@ -21,7 +21,7 @@ void DynamicMap::drawRoute(const std::vector<geometry_msgs::Point> &route, doubl
     }
 }
 
-MapMetaData DynamicMap::readMeta(const std::string &filename) {
+void DynamicMap::readMeta(const std::string &filename) {
     YAML::Node node = YAML::LoadFile(filename);
     meta.resolution = node["resolution"].as<double>();
     meta.origin_latitude  = node["origin_latitude"].as<double>();

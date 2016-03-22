@@ -23,7 +23,7 @@ DynamicOctoMap::DynamicOctoMap(int resolution,
 }
 
 DynamicOctoMap::DynamicOctoMap(const std::string &filename)
-    : DynamicMap(filename)
+    : DynamicMap(filename + ".yaml")
     , octomap(new octomap::OcTree(filename + ".bt")) {
     shared_ptr<fcl::CollisionGeometry> geometry(new fcl::OcTree(octomap));
     setCollisionObject(new fcl::CollisionObject(geometry));

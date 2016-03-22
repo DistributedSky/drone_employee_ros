@@ -46,7 +46,7 @@ public:
     /***
      * Read metadata from file
      **/
-    virtual MapMetaData readMeta(const std::string &filename);
+    virtual void readMeta(const std::string &filename);
 
     /***
      * Dump map as binary file

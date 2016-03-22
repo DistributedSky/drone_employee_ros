@@ -11,10 +11,10 @@ SmallATC::SmallATC() {
     std::string filename;
     param::get("~map_file", filename);
     topomap = new DynamicOctoMap(filename);
-    obstacles->addObstacle(0, topomap); 
     ROS_INFO("Loaded topographic map: %s", filename.c_str());
     // Register obstacle
     obstacles = new ObstacleProviderImpl<DynamicOctoMap>(node_handle);
+    obstacles->addObstacle(0, topomap); 
     // Make a planner
     atc_planner = new PlannerOMPL(obstacles, topomap->getMeta());
     // Making the route request/response handlers
@@ -53,11 +53,6 @@ void SmallATC::requestHandler(const LocalRouteRequest::ConstPtr &msg) {
 }
 
 int SmallATC::exec() {
-    // No need to publish obstacles in this demo
-    ros::spin();
-    return 0;
-
-    /*
     ros::Rate cycle(0.1);
     while (ros::ok()) {
         // Publish all the obstacles with associated topics
@@ -66,5 +61,4 @@ int SmallATC::exec() {
         cycle.sleep();
     }
     return 0;
-    */
 }
