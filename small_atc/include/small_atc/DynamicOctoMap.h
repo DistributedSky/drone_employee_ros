@@ -12,7 +12,9 @@ class DynamicOctoMap :
     public HasCollisionImpl<fcl::CollisionObject,CollisionCheckerFCL>
 {
 public:
-    DynamicOctoMap(int resolution=3);
+    DynamicOctoMap(int resolution=3,
+        double max_x=10, double max_y=10, double max_z=10,
+        double latitude=0, double longitude=0, double altitude=0);
     DynamicOctoMap(const std::string &filename);
     
     /***
@@ -33,6 +35,13 @@ public:
     void drawAABB(const geometry_msgs::Point &AA,
                   const geometry_msgs::Point &BB);
     void drawSphere(const geometry_msgs::Point &center, double R);
+
+
+    /***
+     * Dump map as binary file
+     **/
+    bool writeBinary(const std::string &filename)
+    { return octomap->writeBinary(filename); }
 
 protected:
     boost::shared_ptr<octomap::OcTree> octomap;

@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS system program_options)
 find_package(octomap REQUIRED)
 find_package(ompl REQUIRED)
 find_package(LibLAS)
@@ -136,10 +136,11 @@ link_directories(${catkin_LIBRARY_DIRS})
 add_library(small_atc
     src/${PROJECT_NAME}/DynamicOctoMap.cpp
     src/${PROJECT_NAME}/PlannerOMPL.cpp
+    src/${PROJECT_NAME}/DynamicMap.cpp
     src/${PROJECT_NAME}/SmallATC.cpp
 )
 
-target_compile_features(small_atc PRIVATE cxx_range_for)
+set_property(TARGET small_atc PROPERTY CXX_STANDARD 11)
 
 target_link_libraries(small_atc
   ${catkin_LIBRARIES}
@@ -147,6 +148,7 @@ target_link_libraries(small_atc
   ${OCTOMAP_LIBRARIES}
   ${OMPL_LIBRARIES}
   ${LIBFCL_LIBRARIES}
+  yaml-cpp
 )
 
 ## Add cmake target dependencies of the library
@@ -156,7 +158,7 @@ target_link_libraries(small_atc
 
 ## Declare a C++ executable
 add_executable(small_atc_node src/small_atc_node.cpp)
-target_compile_features(small_atc_node PRIVATE cxx_range_for)
+set_property(TARGET small_atc_node PROPERTY CXX_STANDARD 11)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -170,11 +172,20 @@ target_link_libraries(small_atc_node
 
 if (LibLAS_FOUND)
     add_executable(las2bt src/tools/las2bt.cpp)
+    set_property(TARGET las2bt PROPERTY CXX_STANDARD 11)
     target_link_libraries(las2bt
         ${catkin_LIBRARIES}
+        ${Boost_LIBRARIES}
         ${libLAS_LIBRARIES}
         ${OCTOMAP_LIBRARIES})
 endif(LibLAS_FOUND)
+
+add_executable(btd src/tools/btd.cpp)
+set_property(TARGET btd PROPERTY CXX_STANDARD 11)
+target_link_libraries(btd
+    ${catkin_LIBRARIES}
+    ${Boost_LIBRARIES}
+    small_atc)
 
 #############
 ## Install ##

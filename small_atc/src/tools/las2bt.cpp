@@ -1,28 +1,7 @@
+#include <boost/program_options.hpp>
 #include <liblas/liblas.hpp>
 #include <octomap/octomap.h>
 #include <iostream>
-
-#define USAGE "USAGE: " << argv[0] \
-    << " points.las map.bt RESOLUTION"
-
-typedef struct {
-    std::string points_filename;
-    std::string map_filename;
-    double resolution;
-} args_t;
-
-bool parse_args(int argc, const char *argv[], args_t &args)
-{
-    if (argc != 4) return false;
-
-    args.points_filename = std::string(argv[1]);
-    args.map_filename    = std::string(argv[2]);
-
-    std::istringstream resolution(argv[3]);
-    resolution >> args.resolution;
-
-    return true;
-}
 
 using namespace boost;
 using namespace liblas;
@@ -31,23 +10,38 @@ using namespace octomap;
 int main(int argc, const char *argv[])
 {
     // Parse input arguments
-    args_t args;
-    if (!parse_args(argc, argv, args))
-    {
-        std::cout << USAGE << std::endl;
+    program_options::options_description desc("Allowed options");
+    desc.add_options()
+        ("help,h", "produce help message")
+        ("input,i", program_options::value<std::string>(), "set .LAS input filename")
+        ("output,o", program_options::value<std::string>(), "set .bt output filename")
+        ("resolution,r", program_options::value<int>(), "set map resolution in meters")
+        ;
+
+    program_options::variables_map vm;
+    program_options::store(program_options::parse_command_line(argc, argv, desc), vm);
+    program_options::notify(vm);    
+
+    if (vm.count("help") || !vm.count("input") ||
+       !vm.count("output") || !vm.count("resolution")) {
+        std::cout << desc << std::endl;
         return 1;
     }
     
+    std::string points_filename = vm["input"].as<char*>();
+    std::string map_filename = vm["output"].as<char*>();
+    int resolution = vm["resolution"].as<int>();
+    
     // Create new map
-    shared_ptr<OcTree> map(new OcTree(args.resolution));
+    shared_ptr<OcTree> map(new OcTree(resolution));
 
     // Open LAS file
-    shared_ptr<std::istream> las(Open(args.points_filename,
+    shared_ptr<std::istream> las(Open(points_filename,
                                       std::ios::in | std::ios::binary));
     if (las == NULL)
     {
         std::cout << "Unable to open "
-                  << args.points_filename << std::endl;
+                  << points_filename << std::endl;
         return 1;
     }
 
@@ -73,10 +67,10 @@ int main(int argc, const char *argv[])
     // Map optimization
     map->updateInnerOccupancy();
     // Dump map to file
-    if (!map->writeBinary(args.map_filename))
+    if (!map->writeBinary(map_filename))
     {
         std::cout << "Unable to write map "
-                  << args.map_filename << std::endl;
+                  << map_filename << std::endl;
         return 1;
     }
     return 0;
