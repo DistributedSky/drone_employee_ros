@@ -8,35 +8,19 @@ using namespace ros;
 using namespace small_atc_msgs;
 
 SmallATC::SmallATC() {
-    MapMetaData map_meta;
-    // TODO: Load map metadata
+    std::string filename;
+    param::get("~map_file", filename);
+    topomap = new DynamicOctoMap(filename);
+    obstacles->addObstacle(0, topomap); 
+    ROS_INFO("Loaded topographic map: %s", filename.c_str());
+    // Register obstacle
     obstacles = new ObstacleProviderImpl<DynamicOctoMap>(node_handle);
-    atc_planner = new PlannerOMPL(obstacles, map_meta);
+    // Make a planner
+    atc_planner = new PlannerOMPL(obstacles, topomap->getMeta());
     // Making the route request/response handlers
     route_response = node_handle.advertise<LocalRouteResponse>("route/response_local", 1);
     route_request  = node_handle.subscribe<LocalRouteRequest>("route/request_local", 1, 
             &SmallATC::requestHandler, this); 
-    // Adding the first obstacle - the topographic map
-    std::string filename;
-    if (param::get("~map_file", filename)) {
-		//Next code is crutch
-		/*Create restricted area
-		DynamicOctoMap *obstacle = new DynamicOctoMap();
-		geometry_msgs::Point point1;
-		geometry_msgs::Point point2;
-		point1.x = -1200;
-		point1.y = -1000;
-		point1.z = 1500;
-		point2.x = 200;
-		point2.y = -600;
-		point2.z = 1200;
-		obstacle->drawAABB(point1, point2);
-		obstacles->addObstacle(777, obstacle);
-        */
-
-        obstacles->addObstacle(0, new DynamicOctoMap(filename));
-        ROS_INFO("Loaded topographic map: %s", filename.c_str());
-    }
 }
 
 SmallATC::~SmallATC() {
@@ -57,8 +41,8 @@ void SmallATC::requestHandler(const LocalRouteRequest::ConstPtr &msg) {
     if (response.valid) {
         ROS_INFO("Plan is valid.");
         // Register route
-        DynamicOctoMap *map = new DynamicOctoMap(); // TODO: resolution set
-        map->drawRoute(response.route, 25);
+        DynamicOctoMap *map = new DynamicOctoMap(topomap->getMeta().resolution); 
+        map->drawRoute(response.route, 5);
         obstacles->addObstacle(response.id, map);
         ROS_INFO("Plan registered with id=%d", response.id);
     } else {

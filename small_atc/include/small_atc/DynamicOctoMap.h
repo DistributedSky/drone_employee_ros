@@ -24,12 +24,6 @@ public:
     octomap_msgs::Octomap getOctomapMsg() const; 
 
     /***
-     * Map resolution getter
-     **/
-    double getResolution() const
-    { return octomap->getResolution(); }
-
-    /***
      * Map update methods
      **/
     void drawAABB(const geometry_msgs::Point &AA,

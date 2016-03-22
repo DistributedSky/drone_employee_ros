@@ -16,9 +16,10 @@ PlannerOMPL::PlannerOMPL(const ObstacleProvider *obstProvider,
 {
     // Set up the bounds
     ob::RealVectorBounds bounds(3);
-    // TODO: set correct bounds by map meta
-    bounds.setLow(-2000);
-    bounds.setHigh(2000);
+    bounds.setLow(0);
+    bounds.setHigh(0, meta.dimentions[0]);
+    bounds.setHigh(1, meta.dimentions[1]);
+    bounds.setHigh(2, meta.dimentions[2]);
     space->as<ob::RealVectorStateSpace>()->setBounds(bounds);
     // Making the validity checker
     ob::StateValidityCheckerPtr checker(

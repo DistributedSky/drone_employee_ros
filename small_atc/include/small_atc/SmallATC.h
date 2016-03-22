@@ -29,6 +29,7 @@ private:
     ObstacleProviderImpl<DynamicOctoMap> *obstacles;
     Planner    *atc_planner;
     NodeHandle  node_handle;
+    DynamicOctoMap *topomap;
 
     Publisher   route_response;
     Subscriber  route_request;

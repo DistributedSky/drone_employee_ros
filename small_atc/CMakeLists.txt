@@ -180,9 +180,9 @@ if (LibLAS_FOUND)
         ${OCTOMAP_LIBRARIES})
 endif(LibLAS_FOUND)
 
-add_executable(btd src/tools/btd.cpp)
-set_property(TARGET btd PROPERTY CXX_STANDARD 11)
-target_link_libraries(btd
+add_executable(btdraw src/tools/btdraw.cpp)
+set_property(TARGET btdraw PROPERTY CXX_STANDARD 11)
+target_link_libraries(btdraw
     ${catkin_LIBRARIES}
     ${Boost_LIBRARIES}
     small_atc)

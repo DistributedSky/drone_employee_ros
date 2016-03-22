@@ -48,7 +48,7 @@ void DynamicOctoMap::drawAABB(const geometry_msgs::Point &AA,
 	double min_x = std::min(AA.x, BB.x);
 	double min_y = std::min(AA.y, BB.y);
 	double min_z = std::min(AA.z, BB.z);
-    double step = getResolution() / 2.0;
+    double step = meta.resolution / 2.0;
 
 	/*
 	for (int x = min_x; x < max_x; x++)
@@ -78,7 +78,7 @@ void DynamicOctoMap::drawAABB(const geometry_msgs::Point &AA,
 
 void DynamicOctoMap::drawSphere(const geometry_msgs::Point &center, double R)
 {
-    double step = getResolution() * 0.01;
+    double step = meta.resolution * 0.01;
     for (double fi = 0; fi <= 2 * M_PI; fi += step)
         for (double teta = 0; teta <= 2 * M_PI; teta += step) {
             octomap::point3d point(center.x + R * sin(teta) * cos(fi),
