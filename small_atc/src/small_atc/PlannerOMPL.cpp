@@ -11,6 +11,7 @@ namespace og = ompl::geometric;
 PlannerOMPL::PlannerOMPL(const ObstacleProvider *obstProvider,
                          const MapMetaData &meta)
         : Planner(meta)
+        , obstacles(obstProvider)
         , space(new ob::RealVectorStateSpace(3))
         , ss(space)
 {
@@ -21,10 +22,6 @@ PlannerOMPL::PlannerOMPL(const ObstacleProvider *obstProvider,
     bounds.setHigh(1, meta.dimentions[1]);
     bounds.setHigh(2, meta.dimentions[2]);
     space->as<ob::RealVectorStateSpace>()->setBounds(bounds);
-    // Making the validity checker
-    ob::StateValidityCheckerPtr checker(
-            new ValidityChecker(ss.getSpaceInformation(), obstProvider));
-    ss.setStateValidityChecker(checker);
 }
 
 std::vector<geometry_msgs::Point>
@@ -76,14 +73,20 @@ PlannerOMPL::plan(const geometry_msgs::Point &start,
     return path;
 }
 
+void PlannerOMPL::setDroneModel(boost::shared_ptr<fcl::CollisionGeometry> model) {
+    // Making the validity checker
+    ob::StateValidityCheckerPtr checker(
+            new ValidityChecker(ss.getSpaceInformation(), obstacles, model));
+    ss.setStateValidityChecker(checker);
+}
+
 bool PlannerOMPL::ValidityChecker::isValid(const ob::State *state) const {
     typedef ob::RealVectorStateSpace::StateType type;
     const type *s = static_cast<const type *>(state);
     // Making an object
-    fcl::Transform3f stateTrans(fcl::Vec3f(s->values[0], s->values[1], s->values[2]));
-    boost::shared_ptr<fcl::Sphere> dronModel(new fcl::Sphere(15));
-    fcl::CollisionObject           stateObject(dronModel, stateTrans);
-    HasCollisionFCL                collisionObject(&stateObject);
+    fcl::Transform3f     stateTrans(fcl::Vec3f(s->values[0], s->values[1], s->values[2]));
+    fcl::CollisionObject stateObject(drone_model, stateTrans);
+    HasCollisionFCL      collisionObject(&stateObject);
     // Check collision for all obstacles in collider
     for (auto obstacle : collider->getCollisionObjects())
         if (obstacle->hasCollision(&collisionObject))

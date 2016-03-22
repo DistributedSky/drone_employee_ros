@@ -3,6 +3,7 @@
 #include <small_atc/DynamicOctoMap.h>
 #include <small_atc_msgs/LocalRouteResponse.h>
 #include <octomap_msgs/Octomap.h>
+#include <fcl/shape/geometric_shapes.h>
 
 using namespace ros;
 using namespace small_atc_msgs;
@@ -16,7 +17,11 @@ SmallATC::SmallATC() {
     obstacles = new ObstacleProviderImpl<DynamicOctoMap>(node_handle);
     obstacles->addObstacle(0, topomap); 
     // Make a planner
-    atc_planner = new PlannerOMPL(obstacles, topomap->getMeta());
+    PlannerOMPL *planner = new PlannerOMPL(obstacles, topomap->getMeta());
+    // Register drone model
+    boost::shared_ptr<fcl::CollisionGeometry> model(new fcl::Sphere(5));
+    planner->setDroneModel(model);
+    atc_planner = planner;
     // Making the route request/response handlers
     route_response = node_handle.advertise<LocalRouteResponse>("route/response_local", 1);
     route_request  = node_handle.subscribe<LocalRouteRequest>("route/request_local", 1, 
