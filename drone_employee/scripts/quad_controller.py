@@ -2,7 +2,7 @@
 
 from mission_wrapper import waypointWrap
 from quad_commander import *
-from geo_math import len_diff_coord
+#from geo_math import len_diff_coord
 
 from rospy import init_node, is_shutdown, spin, sleep, logerr, loginfo, logwarn
 from rospy import Subscriber, Publisher
@@ -45,42 +45,44 @@ def quad_controller(route_queue, position_queue, arming_queue,
         if not route.valid:
             logerr('Route invalid!')
             return
-        target_pos = trgt_queue.get(True, None)
-        need_waypoint_id = None
+        #target_pos = trgt_queue.get(True, None)
+        #need_waypoint_id = 1
         
         # Determine the point where you want to dump the load
-        need_waypoint_id = find_waypoint_id(route, (target_pos.latitude, target_pos.longitude))
-        loginfo('need_waypoint_id: ' + str(need_waypoint_id))
+        #need_waypoint_id = find_waypoint_id(route, (target_pos.latitude, target_pos.longitude))
+        #loginfo('need_waypoint_id: ' + str(need_waypoint_id))
 
         # Push a mission into flight controller
         push_mission(waypointWrap(route.route))
         loginfo('Mission loaded to flight controller.')
+        sleep(1)
         # Set manual mode
-        set_mode('ACRO')
+        set_mode('MANUAL')
+        sleep(1)
         # Enable motors
         arming()
+        sleep(1)
         # Set autopilot mode
-        set_mode('AUTO')
+        set_mode('AUTO.MISSION')
         loginfo('Flight!')
 
         # Wainting for arming
-        sleep(5)
         drop_all(arming_queue)
 
         # If you do not have a goal to clear cargo,
         # we believe that already dropped
-        droped = (need_waypoint_id == None)
-        while arming_queue.get().data and not droped:
-            waypoints = None
-            # To not accumulate elements in arming_queue
-            try:
-                waypoints = waypoints_queue.get_nowait().waypoints
-            except Empty:
-                continue
-            current_waypoint_id = find_cur_waypoint_id(waypoints)
-            if current_waypoint_id > need_waypoint_id:
-                droped = True
-                drop_cargo()
+        #droped = (need_waypoint_id == None)
+        #while arming_queue.get().data and not droped:
+        #    waypoints = None
+        #    # To not accumulate elements in arming_queue
+        #    try:
+        #        waypoints = waypoints_queue.get_nowait().waypoints
+        #    except Empty:
+        #        continue
+        #    current_waypoint_id = find_cur_waypoint_id(waypoints)
+        #    if current_waypoint_id > need_waypoint_id:
+        #        droped = True
+        #        drop_cargo()
 
         # TODO: More elegant case for mission finish check
         while arming_queue.get().data:

@@ -77,10 +77,10 @@ def connect(topic_in, topic_out, handler):
 
 def requestHandler(msg):
     # Payment check
-    if (not msg.sender in payed_address):
-        raise Exception("Address (" + msg.sender.data.data + ") is not payed!")
-    else:
-        payed_address.remove(msg.sender)
+    #if (not msg.sender in payed_address):
+    #    raise Exception("Address (" + msg.sender.data.data + ") is not payed!")
+    #else:
+    #    payed_address.remove(msg.sender)
     # Geo conversions
     req = LocalRouteRequest()
     req.id = msg.id
