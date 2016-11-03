@@ -73,7 +73,7 @@ PlannerOMPL::plan(const geometry_msgs::Point &start,
     return path;
 }
 
-void PlannerOMPL::setDroneModel(boost::shared_ptr<fcl::CollisionGeometry> model) {
+void PlannerOMPL::setDroneModel(std::shared_ptr<fcl::CollisionGeometry> model) {
     // Making the validity checker
     ob::StateValidityCheckerPtr checker(
             new ValidityChecker(ss.getSpaceInformation(), obstacles, model));

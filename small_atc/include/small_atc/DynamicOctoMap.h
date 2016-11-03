@@ -6,6 +6,7 @@
 
 #include <octomap/octomap.h>
 #include <fcl/collision.h>
+#include <memory>
 
 class DynamicOctoMap :
     public DynamicMap,
@@ -34,11 +35,11 @@ public:
     /***
      * Dump map as binary file
      **/
-    bool writeBinary(const std::string &filename)
-    { return octomap->writeBinary(filename); }
+    bool writeBinary(const std::string &filename) {return false;}
+    //{ return octomap->writeBinary(filename); }
 
 protected:
-    boost::shared_ptr<octomap::OcTree> octomap;
+    std::shared_ptr<const octomap::OcTree> octomap;
 };
 
 #endif

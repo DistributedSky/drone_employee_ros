@@ -45,19 +45,21 @@
   <build_depend>roscpp</build_depend>
   <build_depend>rostime</build_depend>
   <build_depend>small_atc_msgs</build_depend>
+  <build_depend>octomap_msgs</build_depend>
   <build_depend>octomap</build_depend>
-  <build_depend>fcl</build_depend>
   <build_depend>ompl</build_depend>
   <build_depend>boost</build_depend>
   <build_depend>xmlrpcpp</build_depend>
+  <build_depend>yaml-cpp</build_depend>
   <run_depend>roslib</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rostime</run_depend>
   <run_depend>small_atc_msgs</run_depend>
   <run_depend>octomap</run_depend>
   <run_depend>ompl</run_depend>
-  <run_depend>fcl</run_depend>
   <run_depend>boost</run_depend>
+  <run_depend>mavros</run_depend>
+  <run_depend>rosbridge_server</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

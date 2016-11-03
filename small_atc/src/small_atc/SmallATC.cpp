@@ -4,6 +4,7 @@
 #include <small_atc_msgs/LocalRouteResponse.h>
 #include <octomap_msgs/Octomap.h>
 #include <fcl/shape/geometric_shapes.h>
+#include <memory>
 
 using namespace ros;
 using namespace small_atc_msgs;
@@ -19,7 +20,7 @@ SmallATC::SmallATC() {
     // Make a planner
     PlannerOMPL *planner = new PlannerOMPL(obstacles, topomap->getMeta());
     // Register drone model
-    boost::shared_ptr<fcl::CollisionGeometry> model(new fcl::Sphere(5));
+    std::shared_ptr<fcl::CollisionGeometry> model(new fcl::Sphere(5));
     planner->setDroneModel(model);
     atc_planner = planner;
     // Making the route request/response handlers

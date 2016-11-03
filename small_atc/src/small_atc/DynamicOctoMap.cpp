@@ -1,17 +1,17 @@
 #include <small_atc/DynamicOctoMap.h>
 #include <small_atc/CollisionCheckerFCL.h>
 #include <octomap_msgs/conversions.h>
-#include <boost/shared_ptr.hpp>
 #include <fcl/octree.h>
 
-using namespace boost;
+using namespace std;
 
 DynamicOctoMap::DynamicOctoMap(int resolution,
         double max_x, double max_y, double max_z,
         double latitude, double longitude, double altitude)
     : octomap(new octomap::OcTree(resolution)) {
+    fcl::Transform3f tf;
     shared_ptr<fcl::CollisionGeometry> geometry(new fcl::OcTree(octomap));
-    setCollisionObject(new fcl::CollisionObject(geometry));
+    setCollisionObject(new fcl::CollisionObject(geometry, tf));
 
     meta.resolution = resolution;
     meta.origin_latitude  = latitude;
@@ -25,8 +25,9 @@ DynamicOctoMap::DynamicOctoMap(int resolution,
 DynamicOctoMap::DynamicOctoMap(const std::string &filename)
     : DynamicMap(filename + ".yaml")
     , octomap(new octomap::OcTree(filename + ".bt")) {
+    fcl::Transform3f tf;
     shared_ptr<fcl::CollisionGeometry> geometry(new fcl::OcTree(octomap));
-    setCollisionObject(new fcl::CollisionObject(geometry));
+    setCollisionObject(new fcl::CollisionObject(geometry, tf));
 }
 
 octomap_msgs::Octomap DynamicOctoMap::getOctomapMsg() const 
@@ -71,20 +72,26 @@ void DynamicOctoMap::drawAABB(const geometry_msgs::Point &AA,
             cloud.push_back(x, y, AA.z); 
             cloud.push_back(x, y, BB.z); 
         }
+
+    auto oct = new octomap::OcTree(*octomap);
     for (auto p : cloud)
-        octomap->updateNode(p, true, false);
-    octomap->updateInnerOccupancy();
+        oct->updateNode(p, true, false);
+    oct->updateInnerOccupancy();
+    octomap = shared_ptr<const octomap::OcTree>(oct);
 }
 
 void DynamicOctoMap::drawSphere(const geometry_msgs::Point &center, double R)
 {
+    auto oct = new octomap::OcTree(*octomap);
+
     double step = meta.resolution * 0.01;
     for (double fi = 0; fi <= 2 * M_PI; fi += step)
         for (double teta = 0; teta <= 2 * M_PI; teta += step) {
             octomap::point3d point(center.x + R * sin(teta) * cos(fi),
                                    center.y + R * sin(teta) * sin(fi),
                                    center.z + R * cos(teta));
-            octomap->updateNode(point, true, false);
+            oct->updateNode(point, true, false);
         }
-    octomap->updateInnerOccupancy();
+    oct->updateInnerOccupancy();
+    octomap = shared_ptr<const octomap::OcTree>(oct);
 }
