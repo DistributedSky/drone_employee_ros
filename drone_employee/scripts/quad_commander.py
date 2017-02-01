@@ -24,3 +24,11 @@ def arming():
         service(True)
     except rospy.ServiceException, e:
         print('Service call failed: {0}'.format(e))
+
+def takeoff():
+    rospy.wait_for_service('mavros/cmd/takeoff')
+    try:
+        service = rospy.ServiceProxy('mavros/cmd/takeoff', CommandBool)
+        service(True)
+    except rospy.ServiceException, e:
+        print('Service call failed: {0}'.format(e))
