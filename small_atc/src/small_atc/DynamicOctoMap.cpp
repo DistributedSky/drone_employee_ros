@@ -10,7 +10,7 @@ DynamicOctoMap::DynamicOctoMap(int resolution,
         double latitude, double longitude, double altitude)
     : octomap(new octomap::OcTree(resolution)) {
     fcl::Transform3f tf;
-    shared_ptr<fcl::CollisionGeometry> geometry(new fcl::OcTree(octomap));
+    boost::shared_ptr<fcl::CollisionGeometry> geometry(new fcl::OcTree(octomap));
     setCollisionObject(new fcl::CollisionObject(geometry, tf));
 
     meta.resolution = resolution;
@@ -26,7 +26,7 @@ DynamicOctoMap::DynamicOctoMap(const std::string &filename)
     : DynamicMap(filename + ".yaml")
     , octomap(new octomap::OcTree(filename + ".bt")) {
     fcl::Transform3f tf;
-    shared_ptr<fcl::CollisionGeometry> geometry(new fcl::OcTree(octomap));
+    boost::shared_ptr<fcl::CollisionGeometry> geometry(new fcl::OcTree(octomap));
     setCollisionObject(new fcl::CollisionObject(geometry, tf));
 }
 
@@ -77,7 +77,7 @@ void DynamicOctoMap::drawAABB(const geometry_msgs::Point &AA,
     for (auto p : cloud)
         oct->updateNode(p, true, false);
     oct->updateInnerOccupancy();
-    octomap = shared_ptr<const octomap::OcTree>(oct);
+    octomap = boost::shared_ptr<const octomap::OcTree>(oct);
 }
 
 void DynamicOctoMap::drawSphere(const geometry_msgs::Point &center, double R)
@@ -93,5 +93,5 @@ void DynamicOctoMap::drawSphere(const geometry_msgs::Point &center, double R)
             oct->updateNode(point, true, false);
         }
     oct->updateInnerOccupancy();
-    octomap = shared_ptr<const octomap::OcTree>(oct);
+    octomap = boost::shared_ptr<const octomap::OcTree>(oct);
 }

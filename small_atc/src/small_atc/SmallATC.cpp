@@ -20,7 +20,7 @@ SmallATC::SmallATC() {
     // Make a planner
     PlannerOMPL *planner = new PlannerOMPL(obstacles, topomap->getMeta());
     // Register drone model
-    std::shared_ptr<fcl::CollisionGeometry> model(new fcl::Sphere(5));
+    boost::shared_ptr<fcl::CollisionGeometry> model(new fcl::Sphere(5));
     planner->setDroneModel(model);
     atc_planner = planner;
     // Making the route request/response handlers
