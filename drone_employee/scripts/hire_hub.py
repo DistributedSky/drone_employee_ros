@@ -36,6 +36,15 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         if len(db.query(DroneMove).all()) > 0:
             act = db.query(DroneMove).first()
-            rospy.loginfo("Received command: " + act.move)
+            db.query(DroneMove).all().delete()
+            rospy.loginfo('Received command: ' + act.move)
+            if act.move == 'A':
+                mission(2)
+            elif act.move == 'B':
+                mission(3)
+            elif act.move == 'C':
+                mission(4)
+            elif act.move == 'Home':
+                set_mode('RTL')
         else:
             rospy.sleep(1)
