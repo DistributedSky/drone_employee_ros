@@ -5,7 +5,7 @@
 	<arg name="gcs_url" default="" />
 	<arg name="tgt_system" default="1" />
 	<arg name="tgt_component" default="1" />
-	<arg name="log_output" default="log" />
+	<arg name="log_output" default="screen" />
 
 	<include file="$(find mavros)/launch/node.launch">
 		<arg name="pluginlists_yaml" value="$(find mavros)/launch/apm_pluginlists.yaml" />
@@ -18,5 +18,5 @@
 		<arg name="log_output" value="$(arg log_output)" />
 	</include>
 
-    <node name="hire_hub" pkg="drone_employee" type="hire_hub.py" />
+    <node name="hire_hub" pkg="drone_employee" type="hire_hub.py" output="screen" />
 </launch>
