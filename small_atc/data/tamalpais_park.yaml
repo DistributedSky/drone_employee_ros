@@ -1,3 +1,8 @@
+resolution: 3
 origin_latitude: 37.874815
 origin_longitude: -122.616569
 origin_altitude: -1139
+dimentions:
+  - 4000
+  - 4000
+  - 10000

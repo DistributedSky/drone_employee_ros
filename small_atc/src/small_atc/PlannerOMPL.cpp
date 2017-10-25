@@ -17,7 +17,9 @@ PlannerOMPL::PlannerOMPL(const ObstacleProvider *obstProvider,
 {
     // Set up the bounds
     ob::RealVectorBounds bounds(3);
-    bounds.setLow(0);
+    bounds.setLow(0, -meta.dimentions[0]);
+    bounds.setLow(1, -meta.dimentions[1]);
+    bounds.setLow(2, 0);
     bounds.setHigh(0, meta.dimentions[0]);
     bounds.setHigh(1, meta.dimentions[1]);
     bounds.setHigh(2, meta.dimentions[2]);
@@ -73,7 +75,7 @@ PlannerOMPL::plan(const geometry_msgs::Point &start,
     return path;
 }
 
-void PlannerOMPL::setDroneModel(boost::shared_ptr<fcl::CollisionGeometry> model) {
+void PlannerOMPL::setDroneModel(std::shared_ptr<fcl::CollisionGeometry> model) {
     // Making the validity checker
     ob::StateValidityCheckerPtr checker(
             new ValidityChecker(ss.getSpaceInformation(), obstacles, model));

@@ -6,7 +6,7 @@
 
 #include <octomap/octomap.h>
 #include <fcl/collision.h>
-#include <boost/shared_ptr.hpp>
+//#include <boost/shared_ptr.hpp>
 
 class DynamicOctoMap :
     public DynamicMap,
@@ -39,7 +39,7 @@ public:
     //{ return octomap->writeBinary(filename); }
 
 protected:
-    boost::shared_ptr<const octomap::OcTree> octomap;
+    std::shared_ptr<const octomap::OcTree> octomap;
 };
 
 #endif

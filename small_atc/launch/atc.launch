@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="map_file" default="$(find small_atc)/data/admiralspb"/>
+    <arg name="map_file" default="$(find small_atc)/data/tamalpais_park"/>
 
     <!-- Air traffic controller node -->
     <node name="air_traffic_controller" pkg="small_atc" type="small_atc_node" output="screen">

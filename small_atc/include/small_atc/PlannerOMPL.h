@@ -21,7 +21,7 @@ public:
     
     std::vector<Point> plan(const Point &start, const Point &goal); 
 
-    void setDroneModel(boost::shared_ptr<fcl::CollisionGeometry> model);
+    void setDroneModel(std::shared_ptr<fcl::CollisionGeometry> model);
 
 protected:
     class ValidityChecker :
@@ -29,7 +29,7 @@ protected:
     public:
         ValidityChecker(const ompl::base::SpaceInformationPtr &si,
                         const ObstacleProvider *obstProvider,
-                        boost::shared_ptr<fcl::CollisionGeometry> model)
+                        std::shared_ptr<fcl::CollisionGeometry> model)
             : ompl::base::StateValidityChecker(si)
             , collider(obstProvider)
             , drone_model(model)
@@ -40,7 +40,7 @@ protected:
         bool isValid(const ompl::base::State *state) const; 
     private:
         const ObstacleProvider *collider;
-        boost::shared_ptr<fcl::CollisionGeometry> drone_model;
+        std::shared_ptr<fcl::CollisionGeometry> drone_model;
     };
 
     const ObstacleProvider *obstacles;
